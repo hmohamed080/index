@@ -1,0 +1,242 @@
+@import "tailwindcss";
+
+@theme {
+  /* IBS brand colors */
+  --color-ibs-green:        #18AA7A;
+  --color-ibs-green-hover:  #12926A;
+  --color-ibs-green-light:  oklch(96% 0.028 163.6);
+  --color-ibs-green-border: oklch(86% 0.07 163.6);
+
+  /* Accessible CTA green — passes WCAG AA (≥4.5:1) with white text */
+  --color-cta:        oklch(49% 0.14 163.6);
+  --color-cta-hover:  oklch(43% 0.13 163.6);
+
+  /* Accessible text green — passes WCAG AA (≥4.5:1) on bg/surface */
+  --color-ibs-green-text: oklch(34% 0.12 163.6);
+
+  /* Neutral surfaces — all tinted toward IBS green */
+  --color-bg:       oklch(99.2% 0.005 163.6);
+  --color-surface:  oklch(97.5% 0.006 163.6);
+  --color-border:   oklch(90%   0.007 163.6);
+
+  /* Text scale */
+  --color-text:     oklch(12%  0.008 163.6);
+  --color-text-2:   oklch(40%  0.008 163.6);
+  --color-text-3:   oklch(48%  0.006 163.6);
+
+  /* Footer ink */
+  --color-ink:      oklch(14%  0.008 163.6);
+
+  /* Shadows */
+  --shadow-card:       0 4px 24px oklch(0% 0 0 / 0.1);
+  --shadow-card-hover: 0 4px 16px oklch(0% 0 0 / 0.08);
+
+  /* Fonts — CSS variables are injected by next/font at runtime */
+  --font-display: var(--font-cairo), system-ui, sans-serif;
+  --font-body:    var(--font-cairo), system-ui, sans-serif;
+  --font-en:      var(--font-montserrat), system-ui, sans-serif;
+}
+
+/* ── Global resets ──────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Hero entrance + float ─────────────────────────────── */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+.hero-rise {
+  opacity: 0;
+  animation: hero-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-float {
+  animation: hero-float 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise {
+    opacity: 1;
+    animation: none;
+  }
+  .hero-float {
+    animation: none;
+  }
+}
+
+/* ── Mobile menu drop ──────────────────────────────────── */
+@keyframes menu-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-menu {
+  animation: menu-drop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu {
+    animation: none;
+  }
+}
+
+.program-card {
+  transform-origin: 50% 100%;
+  contain: layout paint;
+}
+
+.program-card::before {
+  content: "";
+  position: absolute;
+  inset: -45% -70%;
+  background:
+    linear-gradient(
+      105deg,
+      transparent 35%,
+      oklch(99% 0.005 163.6 / 0.18) 45%,
+      oklch(99% 0.005 163.6 / 0.58) 50%,
+      oklch(99% 0.005 163.6 / 0.16) 55%,
+      transparent 66%
+    );
+  opacity: 0;
+  transform: translate3d(38%, 0, 0) rotate(8deg);
+  transition:
+    opacity 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 850ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.program-card:hover::before {
+  opacity: 1;
+  transform: translate3d(-34%, 0, 0) rotate(8deg);
+}
+
+.program-card__line {
+  position: absolute;
+  inset-inline: 1rem;
+  top: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--color-ibs-green);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+
+.program-card:hover .program-card__line {
+  transform: scaleX(1);
+}
+
+.program-card__glow {
+  position: absolute;
+  width: 13rem;
+  height: 13rem;
+  inset-inline-end: -6rem;
+  top: -6rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, oklch(68% 0.16 163.6 / 0.25), transparent 66%);
+  opacity: 0;
+  transform: scale(0.72);
+  transition:
+    opacity 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.program-card:hover .program-card__glow {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.program-card__item {
+  transition:
+    color 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.program-card:hover .program-card__item {
+  color: var(--color-text);
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .program-card,
+  .program-card::before,
+  .program-card__line,
+  .program-card__glow,
+  .program-card__item {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ── FAQ accordion animation ───────────────────────────── */
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.faq-answer.open {
+  grid-template-rows: 1fr;
+}
+
+.faq-answer > div {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── Features bordered grid ─────────────────────────────── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  border-top: 1px solid var(--color-border);
+  border-inline-start: 1px solid var(--color-border);
+}
+
+.feature-cell {
+  padding: 1.75rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  border-inline-end: 1px solid var(--color-border);
+  transition: background 0.15s;
+}
+
+.feature-cell:hover {
+  background: var(--color-surface);
+}
